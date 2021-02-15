@@ -1,6 +1,22 @@
 import cv2
 import imagehash
 from PIL import Image
+from os import listdir
+from os.path import isfile, join
+import numpy as np
+
+DATASETFOLDER = "C:/dataset"
+
+def hash_compare(hashes_A, hashes_B):
+    result = []
+
+    for hash_A in hashes_A:
+        for hash_B in hashes_B:
+            diff = hash_A["hash"] - hash_B["hash"]
+            if diff < 5:
+                result.append({"count": hash_A["count"], "sec": hash_A["sec"]})
+                break
+    return result
 
 def get_hash(vidcap, sec, count, video_filename, hashes):
     vidcap.set(cv2.CAP_PROP_POS_MSEC, sec*1000)
@@ -16,7 +32,7 @@ def video_to_hashes(video_filename, hashes):
 
     vidcap = cv2.VideoCapture(video_filename)
     sec = 0
-    frameRate = 0.3 #//it will capture image in each 0.5 second
+    frameRate = 0.5 #//it will capture image in each 0.5 second
     count = 1
     success = get_hash(vidcap, sec, count, video_filename, hashes)
     while success:
@@ -31,10 +47,6 @@ def video_to_hashes(video_filename, hashes):
 
 hashes_A = []
 hashes_B = []
-
-video_to_hashes('C:/Users/alsgu/Downloads/편의점 샛별이.E01.200620.1080p.WEB-DL.x264.AAC-Deresisi.mp4', hashes_A)
-video_to_hashes('C:/Users/alsgu/Downloads/편의점 샛별이.E02.200620.1080p.WEB-DL.x264.AAC-Deresisi.mp4', hashes_B)
-
 
 
 states = ('intro', 'none')
@@ -106,17 +118,11 @@ def example():
                    transition_probability,
                    emission_probability)
 
+# print(example())
+#
+# print(hashes_A, hashes_B)
 
-print(example())
+files = [f for f in listdir(DATASETFOLDER) if isfile(join(DATASETFOLDER, f))]
 
-print(hashes_A, hashes_B)
+print(files)
 
-result = []
-
-for hash_A in hashes_A:
-    for hash_B in hashes_B:
-        diff = hash_A["hash"] - hash_B["hash"]
-        if diff < 5:
-            result.append({"count": hash_A["count"], "sec": hash_A["sec"]})
-            break
-print(result)

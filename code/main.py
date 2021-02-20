@@ -3,12 +3,12 @@ import imagehash
 from PIL import Image
 from os import listdir
 from os.path import isfile, join
-from pomegranate import *
 
 DATASETFOLDER = "C:/dataset"
-VIDEO_TIME = 100
+VIDEO_TIME = 480
 FRAMERATE = 0.5
 FRAME_NUMBER = VIDEO_TIME / FRAMERATE
+SCENE = 3
 
 def hash_compare(hashes_A, hashes_B):
     result = []
@@ -31,13 +31,11 @@ def get_hash(vidcap, sec, count, video_filename, hashes):
         hashes.append({"hash": hash_img, "count": count, "sec": sec})
     return hasFrames
 
-
-
 def video_to_hashes(video_filename, hashes):
 
     vidcap = cv2.VideoCapture(video_filename)
     sec = 0
-    frameRate = 0.5 #//it will capture image in each 0.5 second
+    frameRate = FRAMERATE #//it will capture image in each 0.5 second
     count = 1
     success = get_hash(vidcap, sec, count, video_filename, hashes)
     while success:
@@ -49,23 +47,7 @@ def video_to_hashes(video_filename, hashes):
         success = get_hash(vidcap, sec, count, video_filename, hashes)
     vidcap.release()
 
-
-hashes_A = []
-hashes_B = []
-
-
 states = ('intro', 'none')
-observations = ('(0,0)', '(0,0)', '(1,0)', '(1,1)', '(1,0)', '(0,0)', '(0,0)', '(1,0)', '(1,1)', '(1,1)')
-start_probability = {'intro': 0.43, 'none': 0.57}
-transition_probability = {
-    'intro': {'intro': 0.63, 'none': 0.37},
-    'none': {'intro': 0.44, 'none': 0.56}
-}
-
-emission_probability = {
-    'intro': {'(0,0)': 0.28, '(1,0)': 0.32, '(1,1)': 0.4},
-    'none': {'(0,0)': 0.43, '(1,0)': 0.24, '(1,1)': 0.23}
-}
 #
 # Helps visualize the steps of Viterbi.
 def print_dptable(V):
@@ -116,9 +98,6 @@ def viterbi(obs, states, start_p, trans_p, emit_p):
     return (prob, path[state])
 
 
-# print(example())
-#
-# print(hashes_A, hashes_B)
 def linearSearch(list, key):
     for i in range(len(list)):
         if key == list[i]['count']:
@@ -191,10 +170,10 @@ def obs_to_obs(obs):
     observation_one_video = []
     for i in range(len(obs)):
         intro_and_none = False
-        if ((i+1) % 4) == 0 or i == len(obs):
+        if ((i+1) % 6) == 0 or i == len(obs):
             if obs[i] == 1:
                 c += 1
-            if c >= 3:
+            if c >= 5:
                 observation_one_video.append('1')
             else:
                 observation_one_video.append('0')
@@ -211,10 +190,10 @@ for obs in temp_observation:
     observation_one_video = []
     for i in range(len(obs)):
         intro_and_none = False
-        if ((i+1) % 4) == 0:
+        if ((i+1) % (SCENE / FRAMERATE)) == 0:
             if obs[i] == '1':
                 c += 1
-            if c >= 3:
+            if c >= 5:
                 observation_one_video.append('1')
             else:
                 observation_one_video.append('0')
@@ -229,9 +208,9 @@ print(observation)
 def create_intro_list(start_time, end_time):
     result = []
 
-    start = start_time / 2
-    end = end_time / 2
-    for i in range(int(VIDEO_TIME/2)):
+    start = start_time / SCENE
+    end = end_time / SCENE
+    for i in range(int(VIDEO_TIME/SCENE)):
         if start <= i <= end:
             result.append('intro')
         else:

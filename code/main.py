@@ -112,6 +112,9 @@ hash_list = []
 
 temp_observation = []
 
+len_of_train = int((0.7) * len(files))
+len_of_test = len(files) - len_of_train
+
 for i in range(len(files)):
     hash_A = []
     video_to_hashes(files[i], hash_A)
@@ -159,7 +162,7 @@ def group_compare_to_get_hash(filename):
             if linearSearch(temp_hashlist[m], k) == 1:
                 temp_count += 1
 
-        if count >= 3:
+        if temp_count >= 3:
             temp_zero_one_list.append('1')
         else:
             temp_zero_one_list.append('0')
@@ -226,8 +229,6 @@ for i in range(len(files)):
 
 print(labels)
 
-len_of_train = int((0.7)*len(files))
-len_of_test = len(files) - len_of_train
 trainX, trainY = observation[:len_of_train], labels[:len_of_train]
 testX, testY = observation[-len_of_test:], labels[-len_of_test:]
 

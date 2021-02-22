@@ -56,7 +56,7 @@ def print_dptable(V):
         s += "%.5s: " % y
         s += " ".join("%.7s" % ("%f" % v[y]) for v in V)
         s += "\n"
-    print(s)
+    # print(s)
 
 
 def viterbi(obs, states, start_p, trans_p, emit_p):
@@ -66,11 +66,11 @@ def viterbi(obs, states, start_p, trans_p, emit_p):
 
     # Initialize base cases (t == 0)
     for y in states:
-        print(y)
+        # print(y)
         V[0][y] = start_p[y] * emit_p[y][obs[0]]
         path[y] = [y]
-        print(V)
-        print(path)
+        # print(V)
+        # print(path)
 
     # alternative Python 2.7+ initialization syntax
     # V = [{y:(start_p[y] * emit_p[y][obs[0]]) for y in states}]
@@ -88,7 +88,7 @@ def viterbi(obs, states, start_p, trans_p, emit_p):
             # print("gggg", path[state] + [y])
             # print("eeee", path[state], [y])
             newpath[y] = path[state] + [y]
-            print("d", newpath)
+            # print("d", newpath)
         # Don't need to remember the old paths
         path = newpath
 
@@ -112,7 +112,7 @@ hash_list = []
 
 temp_observation = []
 
-for i in range(5):
+for i in range(len(files)):
     hash_A = []
     video_to_hashes(files[i], hash_A)
     hashlist = []
@@ -220,14 +220,19 @@ def create_intro_list(start_time, end_time):
 
 labels = []
 
-for i in range(5):
+for i in range(len(files)):
     labeled = create_intro_list(0, 54)
     labels.append(labeled)
 
 print(labels)
 
+len_of_train = int((0.7)*len(files))
+len_of_test = len(files) - len_of_train
+trainX, trainY = observation[:len_of_train], labels[:len_of_train]
+testX, testY = observation[-len_of_test:], labels[-len_of_test:]
+
 observation_to_predicts = []
-filename_one = (str(DATASETFOLDER) + '/' +'사이코지만 괜찮아 E06.200705.1080p.WEB-DL.x264.AAC-Deresisi.mp4')
+filename_one = (str(DATASETFOLDER) + '/' +'사이코지만 괜찮아 E10.200719.1080p.WEB-DL.x264.AAC-Deresisi.mp4')
 
 hash_AA = []
 video_to_hashes(filename_one, hash_AA)
@@ -335,13 +340,16 @@ def get_start_probability_list(obs, label):
 
     return start_prob
 
-print(get_start_probability_list(observation, labels))
+start_p = get_start_probability_list(trainX, trainY)
+transition_p = get_transition_probability_list(trainX, trainY)
+emission_p = get_emission_probability_list(trainX, trainY)
 
-def example():
+def example(observation):
     return viterbi(observation_to_predict,
                    states,
-                   get_start_probability_list(observation, labels),
-                   get_transition_probability_list(observation, labels),
-                   get_emission_probability_list(observation, labels))
+                   start_p,
+                   transition_p,
+                   emission_p)
 
-print(example())
+for test in testX:
+    print(example(test))

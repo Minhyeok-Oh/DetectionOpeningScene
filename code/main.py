@@ -171,7 +171,7 @@ def group_compare_to_get_hash(filename):
         else:
             temp_zero_one_list.append('0')
     return temp_zero_one_list
-
+#
 observation = []
 
 for obs in temp_observation:

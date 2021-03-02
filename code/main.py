@@ -4,7 +4,7 @@ from PIL import Image
 from os import listdir
 from os.path import isfile, join
 
-DATASETFOLDER = "C:/dataset"
+DATASETFOLDER = "C:/dataset/원피스"
 VIDEO_TIME = 480
 FRAMERATE = 0.5
 FRAME_NUMBER = VIDEO_TIME / FRAMERATE
@@ -123,14 +123,18 @@ for i in range(len(files)):
     zero_one_list = []
 
     for j in range(5):
+        index = i + j
+        if(index >= len(files) - 1):
+            index = i - j
+
         if i == j:
             continue
         hash_B = []
-        video_to_hashes(files[j], hash_B)
+        video_to_hashes(files[index], hash_B)
         result = hash_compare(hash_A, hash_B)
         hashlist.append(result)
 
-    for k in range(1, int(FRAME_NUMBER) + 1):
+    for k in range(1, int(FRAME_NUMBER) + 1) :
         count = 0
         for m in range(4):
             if linearSearch(hashlist[m], k) == 1:
@@ -167,24 +171,6 @@ def group_compare_to_get_hash(filename):
         else:
             temp_zero_one_list.append('0')
     return temp_zero_one_list
-
-def obs_to_obs(obs):
-    c = 0
-    observation_one_video = []
-    for i in range(len(obs)):
-        intro_and_none = False
-        if ((i+1) % 6) == 0 or i == len(obs):
-            if obs[i] == 1:
-                c += 1
-            if c >= 5:
-                observation_one_video.append('1')
-            else:
-                observation_one_video.append('0')
-            c = 0
-        else:
-            if obs[i] == '1':
-                c += 1
-    return observation_one_video
 
 observation = []
 
@@ -223,43 +209,16 @@ def create_intro_list(start_time, end_time):
 
 labels = []
 
-for i in range(len(files)):
-    labeled = create_intro_list(0, 54)
+for i in range(len_of_train):
+    start = int(input('%d 화 인트로 Start : ' % (i+1)))
+    end = int(input('%d 화 인트로 End : ' % (i+1)))
+    labeled = create_intro_list(start, end)
     labels.append(labeled)
 
 print(labels)
 
 trainX, trainY = observation[:len_of_train], labels[:len_of_train]
 testX, testY = observation[-len_of_test:], labels[-len_of_test:]
-
-observation_to_predicts = []
-filename_one = (str(DATASETFOLDER) + '/' +'사이코지만 괜찮아 E10.200719.1080p.WEB-DL.x264.AAC-Deresisi.mp4')
-
-hash_AA = []
-video_to_hashes(filename_one, hash_AA)
-temp_hashlist = []
-
-temp_zero_one_list = []
-
-for j in range(4):
-    hash_BB = []
-    video_to_hashes(files[j], hash_BB)
-    temp_result = hash_compare(hash_AA, hash_BB)
-    temp_hashlist.append(temp_result)
-
-for k in range(1, int(FRAME_NUMBER)+1):
-    temp_count = 0
-    for m in range(4):
-        if linearSearch(temp_hashlist[m], k) == 1:
-            temp_count += 1
-
-    if temp_count >= 3:
-        temp_zero_one_list.append('1')
-    else:
-        temp_zero_one_list.append('0')
-
-
-observation_to_predict = obs_to_obs(temp_zero_one_list)
 
 def get_emission_probability_list(obs, label):
     intro_all_case = 0
@@ -291,8 +250,6 @@ def get_emission_probability_list(obs, label):
 
     return emission_prob
 
-print(get_emission_probability_list(observation,labels))
-
 def get_transition_probability_list(obs, label):
     intro_all_case = 0
 
@@ -322,9 +279,6 @@ def get_transition_probability_list(obs, label):
 
     return transition_prob
 
-print(get_transition_probability_list(observation, labels))
-
-
 def get_start_probability_list(obs, label):
     all_case = len(obs)
 
@@ -346,7 +300,7 @@ transition_p = get_transition_probability_list(trainX, trainY)
 emission_p = get_emission_probability_list(trainX, trainY)
 
 def example(observation):
-    return viterbi(observation_to_predict,
+    return viterbi(observation,
                    states,
                    start_p,
                    transition_p,
@@ -354,3 +308,5 @@ def example(observation):
 
 for test in testX:
     print(example(test))
+
+print("train: ", trainX, trainY, "test: ", testX, testY)

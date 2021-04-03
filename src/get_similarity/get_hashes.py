@@ -3,8 +3,9 @@ import imagehash
 from PIL import Image
 import utils.constants as c
 
+
 def get_hash(vidcap, sec, count, video_filename, hashes):
-    vidcap.SET(cv2.CAP_PROP_POS_MSEC, sec*1000)
+    vidcap.set(cv2.CAP_PROP_POS_MSEC, sec*1000)
     hasFrames, image = vidcap.read()
 
     if hasFrames:
@@ -12,7 +13,6 @@ def get_hash(vidcap, sec, count, video_filename, hashes):
         hash_img = imagehash.average_hash(Image.fromarray(image))
         hashes.append({"hash": hash_img, "count": count, "sec": sec})
     return hasFrames
-
 
 
 def video_to_hashes(video_filename, hashes):

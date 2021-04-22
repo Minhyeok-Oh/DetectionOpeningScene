@@ -14,8 +14,12 @@ def get_intro_interval(viterbi_result):
                     start = count
                     consecutive = 1
                 elif (viterbi_result[1][count + 1] == 'none') & (consecutive == 1):
-                    end = count
+                    end = count + 1
                     consecutive = 0
-                    intro_list.append(str(start*3) + '-' + str(end*3))
+                    intro_list.append(str(start*2) + '-' + str(end*2))
         count = count + 1
     return intro_list
+
+
+def result_to_json():
+    i = 0

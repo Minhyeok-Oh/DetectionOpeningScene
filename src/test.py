@@ -1,35 +1,40 @@
 from os import listdir
+import glob, os
 from os.path import isfile, join
+import winsound as sd
+import json
 
 
-#
-# DATASETFOLDER = "F:/고스트 헌트"
-#
-# files = ["F:/고스트 헌트/" + f for f in listdir(DATASETFOLDER) if isfile(join(DATASETFOLDER, f))]
-#
+len = 4
+folder = "F:/"
 
-temp = (1.1745510915347549e-14, ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'intro', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'])
+data = {
+    "start": 43.2,
+    "transition": 53.1,
+    "emission": 23.4
+}
+intro = {}
+
+# print(intro)
+for i in range(10):
+    start = int(input(f'{i+1}화 start: '))
+    end = int(input(f'{i+1}화 end: '))
+    intro[i+1] = {}
+    intro[i + 1]["start"] = start
+    intro[i + 1]["end"] = end
+# print(intro)
+with open(f"{folder}intro_info.json", "w") as json_file:
+    json.dump(intro, json_file)
+
+with open(f"{folder}intro_info.json", "r") as st_json:
+    st_python = json.load(st_json)
+
+python = {"k": 1, "m":3}
+
+st_python["predict_result"] = python
+
+print(st_python)
 
 
-def get_intro_interval(viterbi_result):
-    intro_list = []
-    count = 0
-    start = 0
-    end = 0
-    consecutive = 0
 
-    for viterbi_result in temp[1]:
-
-        if count + 1 < len(temp[1]):
-
-            if viterbi_result == 'intro':
-                if (temp[1][count+1] == 'intro') & (consecutive == 0):
-                    start = count
-                    consecutive = 1
-                elif (temp[1][count+1] == 'none') & (consecutive == 1):
-                    end = count
-                    consecutive = 0
-                    intro_list.append(str(start*3) + '-' + str(end*3))
-        count = count + 1
-    return intro_list
 

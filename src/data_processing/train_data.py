@@ -1,6 +1,20 @@
 import utils.constants as util
 from get_similarity import compare as compare, get_hashes as hash
+import json
 
+
+def make_intro_info(num, folder):
+    intro = {}
+
+    for i in range(num):
+        start = int(input(f'{i + 1}화 start: '))
+        end = int(input(f'{i + 1}화 end: '))
+        intro[i + 1] = {}
+        intro[i + 1]["start"] = start
+        intro[i + 1]["end"] = end
+
+    with open(f"{folder}/intro_info.json", "w") as json_file:
+        json.dump(intro, json_file, indent=4)
 
 
 def create_intro_list(start_time, end_time):
@@ -8,7 +22,7 @@ def create_intro_list(start_time, end_time):
 
     start = start_time / util.SCENE
     end = end_time / util.SCENE
-    for i in range(int(util.VIDEO_TIME/util.SCENE)):
+    for i in range(int(util.VIDEO_TIME / util.SCENE)):
         if start <= i <= end:
             result.append('intro')
         else:
@@ -16,12 +30,13 @@ def create_intro_list(start_time, end_time):
     return result
 
 
-def create_label_list(num, labels):
-
-    for i in range(num):
-        start = input(f'{i+1} start : ')
-        end = input(f'{i+1} end : ')
+def create_label_list(num, labels, intro_info):
+    i = 1
+    while i <= num:
+        start = intro_info[f'{i}']["start"]
+        end = intro_info[f'{i}']["end"]
         labels.append(create_intro_list(start, end))
+        i = i + 1
 
 
 def linear_search(list, key):
@@ -40,7 +55,7 @@ def observation_processing(observation, temp_observation):
             if ((i + 1) % (util.SCENE / util.FRAMERATE)) == 0:
                 if obs[i] == '1':
                     c += 1
-                if c >= 7:
+                if c >= 2:
                     observation_one_video.append('1')
                 else:
                     observation_one_video.append('0')
@@ -58,14 +73,19 @@ def combine_observation(files, temp_observation):
         hashlist = []
 
         zero_one_list = []
-
         for j in range(5):
-            index = i + j
-            if index >= len(files) - 1:
-                index = i - j
+            if i == 0:
+                index = i + j
+            elif i == 1:
+                index = i + j - 1
+            else:
+                index = i + j - 2
+                if index > len(files) - 1:
+                    index = len(files) - j - 1
 
-            if i == j:
+            if i == index:
                 continue
+
             hash_B = []
             hash.video_to_hashes(files[index], hash_B)
             result = compare.hash_compare(hash_A, hash_B)
@@ -83,3 +103,5 @@ def combine_observation(files, temp_observation):
                 zero_one_list.append('0')
 
         temp_observation.append(zero_one_list)
+
+

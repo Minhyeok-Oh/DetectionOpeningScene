@@ -19,7 +19,7 @@ def beefsound():
 def all_execute_for_series():
     states = ('intro', 'none')
 
-
+    total_time = 0;
     dir_list = [util.DATASETFOLDER + "/" + f for f in listdir(util.DATASETFOLDER)]
 
     for vid_name in dir_list:
@@ -95,12 +95,12 @@ def all_execute_for_series():
             },
             "running_time": end
         }
-
+        total_time = total_time + end
         execute_result['predict_result'] = predict_result
 
         with open(f"{vid_name}execute_result.json", "w") as json_file:
             json.dump(execute_result, json_file, indent=4)
-
+    print(f'총 소요시간 : {total_time}')
 
 
 

@@ -76,11 +76,13 @@ def all_execute_for_series():
 
         idx = len_of_train
 
+        predict_result = {}
         for test in testX:
             idx += 1
             print(str(idx) + '화')
             print(example(test))
             print(gr.get_intro_interval(example(test)))
+            predict_result[f'{idx}'] = gr.get_intro_interval(example(test))
 
         print("time: ", end)
 
@@ -93,6 +95,8 @@ def all_execute_for_series():
             },
             "running_time": end
         }
+
+        execute_result['predict_result'] = predict_result
 
         with open(f"{vid_name}execute_result.json", "w") as json_file:
             json.dump(execute_result, json_file, indent=4)

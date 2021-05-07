@@ -2,11 +2,19 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/data_processing" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/extract_result" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/get_similarity" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/utils" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/predict_result_visualization_with_web" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/src/data_processing" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/src/extract_result" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/src/get_similarity" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/src/utils" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/static" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/static/css" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/static/img" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/static/js" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/ui" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/predict_result_visualization_with_web/ui/migrations" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.8 (DetectionOpeningScene1)" jdkType="Python SDK" />

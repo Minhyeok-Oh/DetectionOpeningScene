@@ -22,6 +22,17 @@ def all_execute_for_series():
     total_time = 0
     dir_list = [util.DATASETFOLDER + "/" + f for f in listdir(util.DATASETFOLDER)]
 
+    indexe = 0
+    files_lens = len(dir_list)
+    while indexe < files_lens:
+        path, ext = os.path.splitext(dir_list[indexe])
+
+        if ext == '.json':
+            del dir_list[indexe]
+            files_lens = files_lens - 1
+            continue
+        indexe = indexe + 1
+
     for vid_name in dir_list:
         print(vid_name)
         files = [str(vid_name) + '/' + f for f in listdir(vid_name) if isfile(join(vid_name, f))]
@@ -97,7 +108,17 @@ def all_execute_for_series():
         execute_result['predict_result'] = predict_result
 
         with open(f"{vid_name}/execute_result.json", "w") as json_file:
-            json.dump(execute_result, json_file, indent=4)
+            json.dump(execute_result, json_file, indent=4, ensure_ascii=False)
+        co = 0
+        for file_name in files:
+            name = os.path.basename(file_name)
+            name_without_etc = os.path.splitext(name)[0]
+            observation_info = {}
+            observation_info['observation'] = observation[co]
+            with open(f"{vid_name}/{name_without_etc}.json", "w") as json_file:
+                json.dump(observation_info, json_file, indent=4, ensure_ascii=False)
+            co = co + 1
+
     print(f'총 소요시간 : {total_time}')
 
 
@@ -183,7 +204,7 @@ def one_series_execute(dir_name):
     execute_result['predict_result'] = predict_result
 
     with open(f"{dir_name}/execute_result.json", "w") as json_file:
-        json.dump(execute_result, json_file, indent=4)
+        json.dump(execute_result, json_file, indent=4, ensure_ascii=False)
 
 
 all_execute_for_series()

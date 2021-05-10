@@ -66,6 +66,8 @@ def observation_processing(observation, temp_observation):
         observation.append(observation_one_video)
 
 
+
+
 def combine_observation(files, temp_observation):
     for i in range(len(files)):
         hash_A = []
@@ -103,5 +105,3 @@ def combine_observation(files, temp_observation):
                 zero_one_list.append('0')
 
         temp_observation.append(zero_one_list)
-
-

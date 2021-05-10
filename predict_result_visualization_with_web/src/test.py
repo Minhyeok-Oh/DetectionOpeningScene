@@ -5,25 +5,25 @@ import cv2
 
 im_list = []
 
-vidcap = cv2.VideoCapture('F:/dataset/나쁜 녀석들/나쁜 녀석들.E11.720p.H264.AAC-BCB.mkv')
+vidcap = cv2.VideoCapture('F:/dataset/1쿨/토라도라 とらドラ ! 02화_1280x720 H264 [HDTV].mkv')
 
 count = 0
 
 vidcap.set(cv2.CAP_PROP_POS_MSEC, (0.4)*1000)
 sec = 0
-while(vidcap.isOpened()):
-
-    ret, image = vidcap.read() # 이미지 사이즈 960x540으로 변경
-    image = cv2.resize(image, (128, 128)) # 30프레임당 하나씩 이미지 추출
-    im_list.append(image)
-    count = count + 1
+while vidcap.isOpened():
+    if sec >= 20:
+        ret, image = vidcap.read() # 이미지 사이즈 960x540으로 변경
+        image = cv2.resize(image, (128, 128)) # 30프레임당 하나씩 이미지 추출
+        im_list.append(image)
+        count = count + 1
     sec = sec + 0.4
     sec = round(sec, 2)
-    if sec >= 44:
+    if sec >= 32:
         break
 
 c = 1
-img = cv2.imread('static/img/img.jpg', cv2.IMREAD_COLOR)
+img = cv2.imread('/white_img.jpg', cv2.IMREAD_COLOR)
 img = cv2.resize(img, (128, 128))
 im_list_list = []
 temp = []
@@ -48,7 +48,7 @@ num = 0
 
 addv = cv2.vconcat(im_list_list)
 
-cv2.imwrite('static/img/ddgg.jpg', addv)
+cv2.imwrite('ddgg.jpg', addv)
 
 result = 0
 cc = 0
@@ -61,4 +61,3 @@ cc = 0
 #     addv = cv2.hconcat(b)
 
 vidcap.release()
-

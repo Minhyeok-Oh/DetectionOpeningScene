@@ -16,12 +16,13 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from ui.views import index
+from ui.views import *
 from django.conf import settings
 
 urlpatterns = [
     path('', index),
     path('admin/', admin.site.urls),
+    path('<str:file_name>', button_event),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

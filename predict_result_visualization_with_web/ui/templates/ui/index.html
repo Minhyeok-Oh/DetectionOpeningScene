@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>코딩조무사팀 산학연계프로젝트</title>
         <style>
 
@@ -8,28 +9,36 @@
     </head>
     <body>
         <div style="text-align:center;" >
-            <h1>오프닝 검출 시스템 UI</h1><hr>
+            <h1>오프닝 검출 시스템 UI (Kwangwoon University 코딩조무사팀 산학연계 SW PROJECT with LGU+)</h1><hr>
         </div>
-        <div style="height:700px;">
-        <div style="text-align:center; width:30%;box-sizing:border-box;float:left;  border: 1px solid #000; display:inline-block;" >
-            <h2>예측 가능한 데이터 셋 VOD 목록</h2><hr>
-            <li><a href="">미스터 선샤인 1회</a></li>
-            <li><a href="">미스터 선샤인 2회</a></li>
-            <li><a href="">토라도라 1회</a></li>
-            <li><a href="">나쁜 녀석들 1회</a></li>
+        <div style="box-sizing:border-box">
+            <div style="text-align:center; width:30%;box-sizing:border-box;float:left;  border: 1px solid #000; display:inline-block;" >
+                <h2>예측 가능한 데이터 셋 VOD 목록</h2><hr>
+                {% for dir in data%}
+                    <button onclick="location.href='{{ dir }}'" style="font-size:20px">{{ dir }}</button>
+                {% endfor %}
+            </div>
+            <div style="text-align:center; width:70%; box-sizing:border-box;float:right; border: 5px solid #000; display:inline-block;">
+                <h2>예측된 오프닝 구간 프레임 시퀀스</h2><hr>
+                {% load static %}
+                <img src="static/img/{{src_name}}.jpg" width='1000px' alt="오류">
+            </div>
+
+            <div style="text-align: center; width:70%; box-sizing:border-box;float:right; border: 5px solid #000; display:inline-block;">
+                <h2>비터비 경로 예측 과정</h2><hr>
+                <details>
+                    <summary>비터비 경로 예측 과정 상세보기(클릭)</summary>
+                    {% for pa in path%}
+                        {{pa}}<br>
+                    {% endfor %}
+                </details>
+            </div><br>
+            <div style="text-align:center; width:70%; box-sizing:border-box;float:right; border: 5px solid #000; display:inline-block;">
+
+                <h2>VOD: {{without_name}}</h2>
+                <p>정확도: 97.3% 예측 소요 시간: {{time}}초, 오프닝 구간: {{opening_start}}-{{opening_end}}(초)</p>
+            </div><br>
         </div>
-        <div style="text-align:center; width:70%; box-sizing:border-box;float:right; border: 1px solid #000; display:inline-block;">
-            <h2>예측된 오프닝 구간 프레임 시퀀스</h2><hr>
-            <img src="/static/img/ddgg.jpg" width='1500px' alt="오류">
-        </div>
-        </div>
-        <div style="text-align:center; border: 1px solid #000;">
-            <h2>비터비 경로</h2><hr>
-            -----------------------
-        </div><br>
-        <div style="text-align:center; border: 1px solid #000;">
-            <h2>VOD: 미스터 선샤인 1회, 정확도: 97.3%, 예측 소요 시간: 4.57분, 오프닝 구간: 3-83(초)</h2>
-        </div><br>
 
 
     </body>

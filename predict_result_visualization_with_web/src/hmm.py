@@ -84,21 +84,22 @@ def print_dptable(V):
         s += "%.5s: " % y
         s += " ".join("%.7s" % ("%f" % v[y]) for v in V)
         s += "\n"
-    # print(s)
+    print(s)
 
 
 def viterbi(obs, states, start_p, trans_p, emit_p):
+    print_path = []
     global t
     V = [{}]
     path = {}
 
     # Initialize base cases (t == 0)
     for y in states:
-        # print(y)
+        #print(y)
         V[0][y] = start_p[y] * emit_p[y][obs[0]]
         path[y] = [y]
-        # print(V)
-        # print(path)
+        #print(V)
+        #print(path)
 
     # alternative Python 2.7+ initialization syntax
     # V = [{y:(start_p[y] * emit_p[y][obs[0]]) for y in states}]
@@ -113,14 +114,15 @@ def viterbi(obs, states, start_p, trans_p, emit_p):
             (prob, state) = max((V[t - 1][y0] * trans_p[y0][y] * emit_p[y][obs[t]], y0) for y0 in states)
 
             V[t][y] = prob
-            # print("gggg", path[state] + [y])
-            # print("eeee", path[state], [y])
+            #print("gggg", path[state] + [y])
+            #print("eeee", path[state], [y])
             newpath[y] = path[state] + [y]
-            # print("d", newpath)
+            print_path.append(f'{t} : d {newpath}')
+
         # Don't need to remember the old paths
         path = newpath
 
-    print_dptable(V)
+    #print_dptable(V)
 
     (prob, state) = max((V[t][y], y) for y in states)
-    return (prob, path[state])
+    return (prob, path[state], print_path)

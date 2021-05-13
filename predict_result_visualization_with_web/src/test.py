@@ -1,63 +1,40 @@
-import numpy as np
-import cv2
-# 영상의 의미지를 연속적으로 캡쳐할 수 있게 하는 class
-# 영상이 있는 경로
+import os
+import shutil
+import os
+from os import listdir
 
-im_list = []
+import utils.constants as util
 
-vidcap = cv2.VideoCapture('F:/dataset/1쿨/토라도라 とらドラ ! 02화_1280x720 H264 [HDTV].mkv')
-
-count = 0
-
-vidcap.set(cv2.CAP_PROP_POS_MSEC, (0.4)*1000)
-sec = 0
-while vidcap.isOpened():
-    if sec >= 20:
-        ret, image = vidcap.read() # 이미지 사이즈 960x540으로 변경
-        image = cv2.resize(image, (128, 128)) # 30프레임당 하나씩 이미지 추출
-        im_list.append(image)
-        count = count + 1
-    sec = sec + 0.4
-    sec = round(sec, 2)
-    if sec >= 32:
-        break
-
-c = 1
-img = cv2.imread('/white_img.jpg', cv2.IMREAD_COLOR)
-img = cv2.resize(img, (128, 128))
-im_list_list = []
-temp = []
-print(len(im_list))
-for a in im_list:
-    temp.append(a)
-    if c % 20 == 0:
-        addc = cv2.hconcat(temp)
-        im_list_list.append(addc)
-        temp = []
-    elif c == len(im_list) and c % 20 != 0:
-        for i in range(20 - (c % 20)):
-            temp.append(img)
-        print(len(temp))
-        addc = cv2.hconcat(temp)
-        im_list_list.append(addc)
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.mkdir(directory)
+    except OSError:
+        print('Error: Creating directory. ' + directory)
 
 
-    c = c + 1
+origin_dir_list = [util.DATASETFOLDER + '/' + f for f in listdir(util.DATASETFOLDER)]
 
-num = 0
+dir_list = [os.path.basename(f) for f in listdir(util.DATASETFOLDER)]
 
-addv = cv2.vconcat(im_list_list)
+indexe = 0
+files_lens = len(dir_list)
+while indexe < files_lens:
+    path, ext = os.path.splitext(dir_list[indexe])
+    path, ext = os.path.splitext(origin_dir_list[indexe])
+    if ext == '.json':
+        del dir_list[indexe]
+        del origin_dir_list[indexe]
+        files_lens = files_lens - 1
+        continue
+    indexe = indexe + 1
 
-cv2.imwrite('ddgg.jpg', addv)
+print(dir_list)
+print(origin_dir_list)
+copy_dir_list = [f'C:/Users/alsgu/OneDrive/바탕 화면/result/{f}' for f in listdir('C:/Users/alsgu/OneDrive/바탕 화면/result')]
+print(copy_dir_list)
 
-result = 0
-cc = 0
-# for b in im_list_list:
-#
-#     addc = cv2.hconcat(b)
-#     cv2.imwrite(f'addc {cc}.jpg', addc)
-#     cc = cc + 1
-# for b in im_list_list:
-#     addv = cv2.hconcat(b)
-
-vidcap.release()
+length = len(origin_dir_list)
+for i in range(length):
+    shutil.copy(f'{origin_dir_list[i]}/execute_result.json',f'{copy_dir_list[i]}/execute_result.json')
+    shutil.copy(f'{origin_dir_list[i]}/intro_info.json',f'{copy_dir_list[i]}/intro_info.json')

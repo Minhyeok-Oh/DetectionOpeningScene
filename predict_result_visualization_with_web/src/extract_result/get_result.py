@@ -1,9 +1,9 @@
 from os import listdir
 from os.path import isfile,join
-
+import urllib
 import cv2
 import os
-import utils.constants as util
+import constants as util
 import json
 
 def get_intro_interval(viterbi_result):
@@ -35,11 +35,11 @@ def extract_frame_sequence_of_intro(file_name, start, end):
     vidcap = cv2.VideoCapture(file_name)
 
     count = 0
-
-    vidcap.set(cv2.CAP_PROP_POS_MSEC, (0.4) * 1000)
     sec = 0
-    while (vidcap.isOpened()):
+
+    while vidcap.isOpened():
         if sec >= start:
+            vidcap.set(cv2.CAP_PROP_POS_MSEC, sec * 1000)
             ret, image = vidcap.read()
             image = cv2.resize(image, (128, 128))
             im_list.append(image)
@@ -50,7 +50,7 @@ def extract_frame_sequence_of_intro(file_name, start, end):
             break
 
     c = 1
-    img = cv2.imread('/white_img.jpg', cv2.IMREAD_COLOR)
+    img = cv2.imread('C:/Users/alsgu/PycharmProjects/DetectionOpeningScene1/predict_result_visualization_with_web/static/img/white_img.jpg', cv2.IMREAD_COLOR)
     img = cv2.resize(img, (128, 128))
     im_list_list = []
     temp = []
@@ -72,7 +72,8 @@ def extract_frame_sequence_of_intro(file_name, start, end):
     addv = cv2.vconcat(im_list_list)
     name = os.path.basename(file_name)
     real_name = os.path.splitext(name)[0]
-    path = f'C:/Users/alsgu/PycharmProjects/DetectionOpeningScene1/predict_result_visualization_with_web/static/img/{real_name}.jpg'
+    quote_real_name = urllib.parse.quote(real_name)
+    path = f'C:/Users/alsgu/PycharmProjects/DetectionOpeningScene1/predict_result_visualization_with_web/static/img/{quote_real_name}.jpg'
 
     extension = os.path.splitext(path)[1]
 
@@ -115,6 +116,7 @@ def extract_probability_json():
     total_emission_none_one = 0
 
     TheNumberOfVOD = 0
+
     total_intro_interval = 0
     for json_file_name in dir_list:
         count += 1
@@ -158,10 +160,8 @@ def extract_probability_json():
             "start": start_prob,
             "transition": transition_prob,
             "emission": emission_prob
-        }
+        },
+        "average_intro_interval": average_intro_interval
     }
     with open(f"{util.DATASETFOLDER}/integrated_model.json", "w") as json_file:
         json.dump(integrated_result, json_file, indent=4, ensure_ascii=False)
-
-
-extract_probability_json()
